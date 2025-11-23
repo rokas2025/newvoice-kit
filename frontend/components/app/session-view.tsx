@@ -67,10 +67,10 @@ export const SessionView = ({
 }: React.ComponentProps<'section'> & SessionViewProps) => {
   const session = useSessionContext();
   const { messages } = useSessionMessages(session);
-  const [chatOpen, setChatOpen] = useState(true);  // Always show chat transcript
+  const [chatOpen, setChatOpen] = useState(true); // Always show chat transcript
   const { isConnectionActive, startDisconnectTransition } = useConnection();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-  
+
   // Performance stats state
   const [stats, setStats] = useState({
     sttDuration: 0,
@@ -116,8 +116,10 @@ export const SessionView = ({
     <section className="bg-background relative z-10 h-full w-full overflow-hidden" {...props}>
       {/* Performance Stats Overlay */}
       {isConnectionActive && (
-        <div className="fixed top-4 right-4 z-50 bg-background/90 backdrop-blur-sm border rounded-lg p-4 text-sm space-y-2 shadow-lg">
-          <div className="font-semibold text-xs uppercase tracking-wide opacity-70">Performance Stats</div>
+        <div className="bg-background/90 fixed top-4 right-4 z-50 space-y-2 rounded-lg border p-4 text-sm shadow-lg backdrop-blur-sm">
+          <div className="text-xs font-semibold tracking-wide uppercase opacity-70">
+            Performance Stats
+          </div>
           <div className="space-y-1">
             <div className="flex justify-between gap-4">
               <span className="opacity-70">STT:</span>
@@ -131,7 +133,7 @@ export const SessionView = ({
               <span className="opacity-70">TTS:</span>
               <span className="font-mono font-semibold">{stats.ttsDuration}ms</span>
             </div>
-            <div className="flex justify-between gap-4 pt-2 border-t">
+            <div className="border-t pt-2 flex justify-between gap-4">
               <span className="font-semibold">Total:</span>
               <span className="font-mono font-bold">{stats.totalDuration}ms</span>
             </div>
