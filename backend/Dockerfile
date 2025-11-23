@@ -27,14 +27,11 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
-# Copy dependency files first for better layer caching
-COPY pyproject.toml ./
+# Copy all application files (including src/ needed for pip install -e .)
+COPY . .
 
 # Install dependencies using pip
 RUN pip install --no-cache-dir -e .
-
-# Copy all application files
-COPY . .
 
 # Change ownership to non-privileged user
 RUN chown -R appuser:appuser /app
