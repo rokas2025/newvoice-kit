@@ -211,9 +211,12 @@ async def my_agent(ctx: JobContext):
         
         logger.info(f"TTS Duration: {tts_duration:.0f}ms | TOTAL: {total_duration:.0f}ms")
         
-        # Send stats as metadata in chat
+        # Send stats via data channel
         stats_msg = f"[STATS] STT:{stt_dur:.0f}ms LLM:{llm_dur:.0f}ms TTS:{tts_duration:.0f}ms TOTAL:{total_duration:.0f}ms"
-        await session.say(stats_msg, add_to_chat_ctx=False)
+        await ctx.room.local_participant.publish_data(
+            stats_msg.encode('utf-8'),
+            topic="lk-chat-topic"
+        )
 
     # Send Lithuanian greeting
     logger.info("Sending greeting to user...")
