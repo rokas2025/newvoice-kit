@@ -98,11 +98,11 @@ export const SessionView = ({
     // Parse timing information from agent messages
     messages.forEach((msg) => {
       const text = msg.message;
-      if (text.includes('Duration:') || text.includes('TOTAL:')) {
-        const sttMatch = text.match(/STT.*Duration:\s*(\d+)ms/);
-        const llmMatch = text.match(/LLM.*Duration:\s*(\d+)ms/);
-        const ttsMatch = text.match(/TTS Duration:\s*(\d+)ms/);
-        const totalMatch = text.match(/TOTAL:\s*(\d+)ms/);
+      if (text.includes('[STATS]')) {
+        const sttMatch = text.match(/STT:(\d+)ms/);
+        const llmMatch = text.match(/LLM:(\d+)ms/);
+        const ttsMatch = text.match(/TTS:(\d+)ms/);
+        const totalMatch = text.match(/TOTAL:(\d+)ms/);
 
         if (sttMatch) setStats((prev) => ({ ...prev, sttDuration: parseInt(sttMatch[1]) }));
         if (llmMatch) setStats((prev) => ({ ...prev, llmDuration: parseInt(llmMatch[1]) }));

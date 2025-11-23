@@ -203,10 +203,17 @@ async def my_agent(ctx: JobContext):
         logger.info("TTS: Started synthesizing speech...")
 
     @session.on("agent_stopped_speaking")
-    def on_agent_stopped():
+    async def on_agent_stopped():
         tts_duration = (time.time() - tts_start_time) * 1000 if tts_start_time else 0
         total_duration = (time.time() - stt_start_time) * 1000 if stt_start_time else 0
+        stt_dur = (stt_start_time and llm_start_time) and (llm_start_time - stt_start_time) * 1000 or 0
+        llm_dur = (llm_start_time and tts_start_time) and (tts_start_time - llm_start_time) * 1000 or 0
+        
         logger.info(f"TTS Duration: {tts_duration:.0f}ms | TOTAL: {total_duration:.0f}ms")
+        
+        # Send stats as metadata in chat
+        stats_msg = f"[STATS] STT:{stt_dur:.0f}ms LLM:{llm_dur:.0f}ms TTS:{tts_duration:.0f}ms TOTAL:{total_duration:.0f}ms"
+        await session.say(stats_msg, add_to_chat_ctx=False)
 
     # Send Lithuanian greeting
     logger.info("Sending greeting to user...")
