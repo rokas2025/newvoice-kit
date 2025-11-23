@@ -203,7 +203,7 @@ async def my_agent(ctx: JobContext):
         logger.info("TTS: Started synthesizing speech...")
 
     @session.on("agent_stopped_speaking")
-    async def on_agent_stopped():
+    def on_agent_stopped():
         tts_duration = (time.time() - tts_start_time) * 1000 if tts_start_time else 0
         total_duration = (time.time() - stt_start_time) * 1000 if stt_start_time else 0
         stt_dur = (stt_start_time and llm_start_time) and (llm_start_time - stt_start_time) * 1000 or 0
@@ -211,12 +211,16 @@ async def my_agent(ctx: JobContext):
         
         logger.info(f"TTS Duration: {tts_duration:.0f}ms | TOTAL: {total_duration:.0f}ms")
         
-        # Send stats via data channel
+        # Send stats via data channel (using create_task for async operation)
         stats_msg = f"[STATS] STT:{stt_dur:.0f}ms LLM:{llm_dur:.0f}ms TTS:{tts_duration:.0f}ms TOTAL:{total_duration:.0f}ms"
-        await ctx.room.local_participant.publish_data(
-            stats_msg.encode('utf-8'),
-            topic="lk-chat-topic"
-        )
+        
+        import asyncio
+        async def send_stats():
+            await ctx.room.local_participant.publish_data(
+                stats_msg.encode('utf-8'),
+                topic="lk-chat-topic"
+            )
+        asyncio.create_task(send_stats())
 
     # Send Lithuanian greeting
     logger.info("Sending greeting to user...")
