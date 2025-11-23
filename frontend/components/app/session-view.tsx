@@ -133,7 +133,7 @@ export const SessionView = ({
               <span className="opacity-70">TTS:</span>
               <span className="font-mono font-semibold">{stats.ttsDuration}ms</span>
             </div>
-            <div className="border-t pt-2 flex justify-between gap-4">
+            <div className="flex justify-between gap-4 border-t pt-2">
               <span className="font-semibold">Total:</span>
               <span className="font-mono font-bold">{stats.totalDuration}ms</span>
             </div>
